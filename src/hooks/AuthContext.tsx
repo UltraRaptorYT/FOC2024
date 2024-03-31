@@ -1,4 +1,6 @@
+import { supabase } from "@/utils/supabase";
 import { createContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   children: React.ReactNode;
@@ -29,13 +31,30 @@ export const AuthContext = createContext<AuthContextType>({
 
 export const AuthProvider = ({ children }: Props) => {
   const [auth, setAuth] = useState<User | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    async function getAuth() {
+      const storedUser = localStorage.getItem("user");
 
-    if (storedUser) {
-      setAuth(JSON.parse(storedUser));
+      if (storedUser) {
+        const userData = JSON.parse(storedUser);
+        const { data, error } = await supabase
+          .from("foc_user")
+          .select()
+          .eq("admin", userData.admin)
+          .eq("name", userData.name)
+          .eq("type", userData.type)
+          .eq("phone", userData.phone);
+        if (error || data.length == 0) {
+          localStorage.removeItem("user");
+          return navigate("/login");
+        }
+        setAuth(userData);
+      }
     }
+
+    getAuth();
   }, []);
 
   return (
