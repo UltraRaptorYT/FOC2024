@@ -8,13 +8,24 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { supabase } from "@/utils/supabase";
 import { toast } from "sonner";
+import useAuth from "@/hooks/useAuth";
+import { User } from "@/hooks/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
+  const { auth, setAuth } = useAuth();
+  const navigate = useNavigate();
   const adminRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (auth) {
+      navigate("/");
+    }
+  }, []);
 
   async function checkCredentials() {
     if (!(adminRef.current && passwordRef.current)) {
@@ -40,6 +51,11 @@ export default function Login() {
     if (data.length == 0) {
       return toast.error("Admin No and Password not found");
     } else {
+      const user: User = data[0];
+      setAuth(user);
+      localStorage.setItem("user", JSON.stringify(user));
+      navigate("/");
+
       return toast.success("Login successful");
     }
   }

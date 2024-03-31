@@ -4,20 +4,14 @@ import "./App.css";
 import Layout from "./pages/Layout";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import GL from "./pages/GL";
-import GP from "./pages/GP";
-import OC from "./pages/OC";
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/GL" element={<GL />} />
-        <Route path="/GP" element={<GP />} />
-        <Route path="/OC" element={<OC />} />
-      </Route>
+        <Route path="/" element={<Layout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+        </Route>
     </Routes>
   );
   // const [count, setCount] = useState(0);
