@@ -16,7 +16,7 @@ import { User } from "@/hooks/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
-  const { auth, setAuth } = useAuth();
+  const { auth, login } = useAuth();
   const navigate = useNavigate();
   const adminRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
@@ -47,13 +47,12 @@ export default function Login() {
       console.log(error);
       return toast.error(JSON.stringify(error));
     }
-    console.log(data);
+    
     if (data.length == 0) {
       return toast.error("Admin No and Password not found");
     } else {
       const user: User = data[0];
-      setAuth(user);
-      localStorage.setItem("user", JSON.stringify(user));
+      login(user);
       navigate("/");
 
       return toast.success("Login successful");
