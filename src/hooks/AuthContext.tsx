@@ -32,11 +32,11 @@ export const AuthContext = createContext<AuthContextType>({
   setAuth: () => null,
   logout: () => null,
   login: () => null,
-  isLoading: false,
+  isLoading: true,
 });
 
 export const AuthProvider = ({ children }: Props) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [auth, setAuth] = useState<User | null>(null);
   const navigate = useNavigate();
 
@@ -56,7 +56,6 @@ export const AuthProvider = ({ children }: Props) => {
   useEffect(() => {
     async function getAuth() {
       try {
-        setIsLoading(true);
         const storedUser = localStorage.getItem("user");
 
         if (storedUser) {
@@ -75,12 +74,12 @@ export const AuthProvider = ({ children }: Props) => {
           }
 
           setAuth(userData);
-          setIsLoading(false);
         }
-
       } catch (e) {
         logout();
-      } 
+      } finally {
+        setIsLoading(false);
+      }
     }
 
     getAuth();

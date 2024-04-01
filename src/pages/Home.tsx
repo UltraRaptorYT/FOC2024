@@ -6,10 +6,10 @@ function Home() {
   const { auth, logout, isLoading } = useAuth();
 
   useEffect(() => {
-    if (!isLoading) {
-      console.log(auth);
+    if (!isLoading && auth === null) {
+      logout();
     }
-  }, []);
+  }, [auth, isLoading]);
 
   return (
     <div>
