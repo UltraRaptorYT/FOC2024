@@ -22,17 +22,19 @@ export type User = {
 type AuthContextType = {
   auth: User | null;
   setAuth: React.Dispatch<React.SetStateAction<User | null>>;
+  isLoading: boolean;
 };
 
 export const AuthContext = createContext<AuthContextType>({
   auth: null,
   setAuth: () => null,
+  isLoading: true,
 });
 
 export const AuthProvider = ({ children }: Props) => {
   const [auth, setAuth] = useState<User | null>(null);
   const navigate = useNavigate();
-
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     async function getAuth() {
       const storedUser = localStorage.getItem("user");
@@ -52,13 +54,14 @@ export const AuthProvider = ({ children }: Props) => {
         }
         setAuth(userData);
       }
+      setIsLoading(false);
     }
 
     getAuth();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ auth, setAuth }}>
+    <AuthContext.Provider value={{ auth, setAuth, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

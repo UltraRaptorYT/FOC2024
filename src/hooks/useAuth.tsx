@@ -7,7 +7,6 @@ const useAuth = () => {
   if (context === undefined) {
     throw new Error("useCurrentUser must be used within a CurrentUserProvider");
   }
-
   return context;
 };
 
