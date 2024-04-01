@@ -17,7 +17,7 @@ function OC() {
   }, [auth, isLoading]);
 
   return (
-    <div className="w-full max-w-sm mx-auto h-full p-3 flex flex-col">
+    <div className="w-full max-w-sm mx-auto h-full px-3 py-5 flex flex-col">
       <div className="flex justify-between"></div>
     </div>
   );
