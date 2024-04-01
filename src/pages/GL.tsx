@@ -9,7 +9,10 @@ function GL() {
   useEffect(() => {
     console.log(auth);
     if (!auth && !isLoading) {
-      navigate("/login");
+      return navigate("/login");
+    }
+    if (auth && auth.type != "GL") {
+      return navigate("/");
     }
   }, [auth, isLoading]);
 

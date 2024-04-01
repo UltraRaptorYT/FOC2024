@@ -16,16 +16,17 @@ import { User } from "@/hooks/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
-  const { auth, setAuth } = useAuth();
+  const { auth, setAuth, isLoading } = useAuth();
   const navigate = useNavigate();
   const adminRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    if (auth) {
-      navigate("/");
+    console.log(auth, isLoading);
+    if (auth && !isLoading) {
+      navigate(`/${auth.type}`);
     }
-  }, []);
+  }, [auth, isLoading]);
 
   async function checkCredentials() {
     if (!(adminRef.current && passwordRef.current)) {
@@ -54,7 +55,7 @@ export default function Login() {
       const user: User = data[0];
       setAuth(user);
       localStorage.setItem("user", JSON.stringify(user));
-      navigate("/");
+      navigate(`/${user.type}`);
 
       return toast.success("Login successful");
     }

@@ -9,11 +9,18 @@ function OC() {
   useEffect(() => {
     console.log(auth);
     if (!auth && !isLoading) {
-      navigate("/login");
+      return navigate("/login");
+    }
+    if (auth && auth.type != "OC") {
+      return navigate("/");
     }
   }, [auth, isLoading]);
 
-  return <div>OC</div>;
+  return (
+    <div className="w-full max-w-sm mx-auto h-full p-3 flex flex-col">
+      <div className="flex justify-between"></div>
+    </div>
+  );
 }
 
 export default OC;
