@@ -23,17 +23,24 @@ function GL() {
 
   const handleNameChange = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (groupData?.name === newGroupName) {
+      return toast.error(
+        "New Group Name is the same as the current name, please enter a new name."
+      );
+    }
+
+    if (newGroupName.length < 3) {
+      return toast.error(
+        "New Group Name must be at least 3 characters long, please enter a new name."
+      );
+    }
+    
     updateGroupName();
   };
 
   const updateGroupName = async () => {
     try {
-      if (groupData?.name === newGroupName) {
-        return toast.error(
-          "New Group Name is the same as the current name, please enter a new name."
-        );
-      }
-
       const { error } = await supabase
         .from("foc_group")
         .update({
