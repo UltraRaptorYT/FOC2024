@@ -8,7 +8,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { User } from "@/hooks/AuthContext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/utils/supabase";
 
@@ -27,13 +27,10 @@ function AccurateQuestion({
 }) {
   const [group, setGroup] = useState<string>();
   const [value, setValue] = useState<number | "">("");
-  useEffect(() => {
-    console.log(auth);
-  }, []);
 
   function checkValue(value: number | ""): boolean {
     if (!value) {
-      toast.warning(`Input value is lower than ${min}`);
+      toast.warning(`Input value is invalid`);
       return false;
     }
     if (value < min) {
@@ -84,7 +81,7 @@ function AccurateQuestion({
     if (data.length) {
       setGroup(undefined);
       setValue("");
-      return toast.success("Added points");
+      return toast.success("Points added");
     }
   }
 
@@ -115,7 +112,7 @@ function AccurateQuestion({
         onChange={(e) => {
           let valueString = (e.target as HTMLInputElement).value;
           if (valueString.length == 0) {
-            setValue(0);
+            setValue("");
           }
           let value = Number(valueString);
           let valueValidation = checkValue(value);

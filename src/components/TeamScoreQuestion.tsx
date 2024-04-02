@@ -5,10 +5,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Label } from "@radix-ui/react-label";
 import { User } from "@/hooks/AuthContext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/utils/supabase";
 
@@ -16,53 +16,29 @@ function TeamScoreQuestion({
   groups,
   auth,
   activity_id,
-  min = 0,
-  max = Infinity,
 }: {
   groups: any[];
   auth: User | null;
   activity_id: number;
-  min?: number;
-  max?: number;
 }) {
-  const [group, setGroup] = useState<string>();
-  const [value, setValue] = useState<number | "">("");
-  useEffect(() => {
-    console.log(auth);
-  }, []);
+  const [winnerGroup, setWinnerGroup] = useState<string>();
+  const [loserGroup, setLoserGroup] = useState<string>();
 
-  function checkValue(value: number | ""): boolean {
-    if (!value) {
-      toast.warning(`Input value is lower than ${min}`);
-      return false;
-    }
-    if (value < min) {
-      toast.warning(`Input value is lower than ${min}`);
-      return false;
-    }
-    if (value > max) {
-      toast.warning(`Input value is higher than ${max}`);
-      return false;
-    }
-    if (!Number.isInteger(value)) {
-      toast.warning(`Input value is not an integer`);
-      return false;
-    }
-    return true;
-  }
-
-  function checkGroup(group: string | undefined): boolean {
+  function checkGroup(
+    group: string | undefined,
+    type: "Winner" | "Loser"
+  ): boolean {
     if (!group) {
-      toast.warning(`No Group selected`);
+      toast.warning(`No ${type} Group selected`);
       return false;
     }
     return true;
   }
 
   async function submitForm() {
-    let groupValidation = checkGroup(group);
-    let valueValidation = checkValue(value);
-    if (!(groupValidation && valueValidation && auth)) {
+    let winnerGroupValidation = checkGroup(winnerGroup, "Winner");
+    let loserGroupValidation = checkGroup(loserGroup, "Loser");
+    if (!(winnerGroupValidation && loserGroupValidation && auth)) {
       return;
     }
     const { data, error } = await supabase
@@ -70,9 +46,9 @@ function TeamScoreQuestion({
       .insert([
         {
           user: auth.admin,
-          group: group,
+          group: winnerGroup,
           game: activity_id,
-          point: value,
+          point: 10,
         },
       ])
       .select();
@@ -82,54 +58,67 @@ function TeamScoreQuestion({
       return;
     }
     if (data.length) {
-      setGroup(undefined);
-      setValue("");
+      setWinnerGroup(undefined);
+      setLoserGroup(undefined);
       return toast.success("Added points");
     }
   }
 
   return (
     <>
-      <Select
-        onValueChange={(value) => {
-          if (value) {
-            setGroup(value);
-          }
-        }}
-        value={group}
-      >
-        <SelectTrigger className="w-full">
-          <SelectValue placeholder="Select a group" />
-        </SelectTrigger>
-        <SelectContent>
-          {groups.map((e) => {
-            return (
-              <SelectItem value={e.id} key={"Group" + e.id}>
-                {"Group " + e.id + ": " + e.name}
-              </SelectItem>
-            );
-          })}
-        </SelectContent>
-      </Select>
-      <Input
-        onChange={(e) => {
-          let valueString = (e.target as HTMLInputElement).value;
-          if (valueString.length == 0) {
-            setValue(0);
-          }
-          let value = Number(valueString);
-          let valueValidation = checkValue(value);
-          if (valueValidation) {
-            setValue(value);
-          }
-        }}
-        value={value == "" ? "" : value}
-        type="number"
-        id="number"
-        placeholder="Accuracy of team"
-        min={min}
-        max={max}
-      />
+      <div className="grid w-full max-w-sm items-center gap-2">
+        <Label htmlFor="winner" className="text-lg font-bold">
+          Winner Group
+        </Label>
+        <Select
+          onValueChange={(value) => {
+            if (value) {
+              setWinnerGroup(value);
+            }
+          }}
+          value={winnerGroup}
+        >
+          <SelectTrigger className="w-full" id="winner">
+            <SelectValue placeholder="Select winner group" />
+          </SelectTrigger>
+          <SelectContent>
+            {groups.map((e) => {
+              return (
+                <SelectItem value={e.id} key={"Group" + e.id}>
+                  {"Group " + e.id + ": " + e.name}
+                </SelectItem>
+              );
+            })}
+          </SelectContent>
+        </Select>
+      </div>
+      <h1 className="text-center text-2xl font-bold">VS</h1>
+      <div className="grid w-full max-w-sm items-center gap-2">
+        <Label htmlFor="loser" className="text-lg font-bold">
+          Loser Group
+        </Label>
+        <Select
+          onValueChange={(value) => {
+            if (value) {
+              setLoserGroup(value);
+            }
+          }}
+          value={loserGroup}
+        >
+          <SelectTrigger className="w-full" id="loser">
+            <SelectValue placeholder="Select loser group" />
+          </SelectTrigger>
+          <SelectContent>
+            {groups.map((e) => {
+              return (
+                <SelectItem value={e.id} key={"Group" + e.id}>
+                  {"Group " + e.id + ": " + e.name}
+                </SelectItem>
+              );
+            })}
+          </SelectContent>
+        </Select>
+      </div>
       <Button className="mx-auto px-6" onClick={() => submitForm()}>
         Submit
       </Button>
