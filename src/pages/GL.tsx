@@ -89,14 +89,14 @@ function GL() {
   }, [auth, isLoading]);
 
   return (
-    <div className="flex flex-col items-center justify-start py-8 w-full min-h-[100dvh] h-full">
+    <div className="flex flex-col items-center justify-start py-8 w-full min-h-[100dvh] h-full bg-gray-100">
       <h1 className="text-3xl font-semibold">
         Hi, <span className="text-purple-800">{auth?.name}!</span>
       </h1>
 
       <main className="max-w-sm w-full flex flex-col px-4">
         {!groupDataLoading && (
-          <div className="border p-4 rounded-lg shadow-md mt-8 w-full text-xl">
+          <div className="border p-4 rounded-lg shadow-md mt-8 w-full text-xl bg-white">
             <h1 className="text-center">
               You are the GL of{" "}
               <span className="font-bold">Group {groupData?.id}</span>
