@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { ThemeToggle } from "@/components/ThemeToggle";
+// import { ThemeToggle } from "@/components/ThemeToggle";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/hooks/AuthContext";
 
