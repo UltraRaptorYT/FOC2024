@@ -6,14 +6,14 @@ function Home() {
   const { auth, logout, isLoading } = useAuth();
 
   useEffect(() => {
-    if (!isLoading && auth === null) {
+    if (!isLoading && !auth) {
       logout();
     }
   }, [auth, isLoading]);
 
   return (
     <div>
-      <Button variant={"destructive"} onClick={() => logout()}>
+      <Button variant={"destructive"} onClick={() => logout()} className="">
         Logout
       </Button>
     </div>

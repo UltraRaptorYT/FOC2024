@@ -8,7 +8,7 @@ function Layout() {
   return (
     <AuthProvider>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <main className="min-h-[100dvh] bg-slate-100 dark:bg-slate-900 flex dark:text-white text-black w-full">
+        <main className="min-h-[100dvh] bg-slate-100 dark:bg-black flex dark:text-white text-black w-full">
           <div className="grow w-full">
             <Outlet />
             <Toaster expand={true} richColors />
