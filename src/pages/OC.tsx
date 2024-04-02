@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Separator } from "@/components/ui/separator";
 
 function OC() {
   const [logs, setLogs] = useState<any[]>([]);
@@ -257,13 +258,14 @@ function OC() {
   }, [day1Game, day2Game, scavenger]);
 
   return (
-    <div className="w-full max-w-sm mx-auto h-[100dvh] px-3 py-5 flex flex-col gap-5">
+    <div className="w-full max-w-sm mx-auto min-h-[100dvh] px-3 py-5 flex flex-col gap-5">
       <div className="flex flex-col gap-2">
         <div className="flex justify-between">
           <div className="flex gap-2 flex-col">
-            <h1 className="text-lg font-semibold underline">Activate Games</h1>
+            <h1 className="text-xl font-bold">Activate Games</h1>
             <div className="flex items-center space-x-2">
               <Checkbox
+                className="data-[state=checked]:bg-purple-800 h-6 w-6"
                 id="day1Game"
                 checked={day1Game}
                 onCheckedChange={(e: boolean) => {
@@ -272,13 +274,14 @@ function OC() {
               />
               <label
                 htmlFor="day1Game"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                className="font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
                 Day 1 Games
               </label>
             </div>
             <div className="flex items-center space-x-2">
               <Checkbox
+                className="data-[state=checked]:bg-purple-800 h-6 w-6"
                 id="scavenger"
                 checked={scavenger}
                 onCheckedChange={(e: boolean) => {
@@ -287,13 +290,14 @@ function OC() {
               />
               <label
                 htmlFor="scavenger"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                className="font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
                 Scavenger Odyssey
               </label>
             </div>
             <div className="flex items-center space-x-2">
               <Checkbox
+                className="data-[state=checked]:bg-purple-800 h-6 w-6"
                 id="day2Game"
                 checked={day2Game}
                 onCheckedChange={(e: boolean) => {
@@ -302,39 +306,42 @@ function OC() {
               />
               <label
                 htmlFor="day2Game"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                className="font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
                 Day 2 Games
               </label>
             </div>
-          </div>
-          <Switch.Group as="div" className="flex items-center">
-            <Switch
-              checked={freeze}
-              onChange={(e) => {
-                setFreeze(e);
-                updateFreeze();
-              }}
-              className={cn(
-                freeze ? "bg-indigo-600" : "bg-gray-200",
-                "relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2"
-              )}
-            >
-              <span
-                aria-hidden="true"
+            <Switch.Group as="div" className="flex items-center pt-8">
+              <Switch
+                checked={freeze}
+                onChange={(e) => {
+                  setFreeze(e);
+                  updateFreeze();
+                }}
                 className={cn(
-                  freeze ? "translate-x-5" : "translate-x-0",
-                  "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                  freeze ? "bg-purple-800" : "bg-gray-200",
+                  "relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2"
                 )}
-              />
-            </Switch>
-            <Switch.Label as="span" className="ml-3 text-sm">
-              <span className="font-medium text-gray-900">Freeze</span>{" "}
-            </Switch.Label>
-          </Switch.Group>
+              >
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    freeze ? "translate-x-5" : "translate-x-0",
+                    "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                  )}
+                />
+              </Switch>
+              <Switch.Label as="span" className="ml-3 text-sm">
+                <span className="font-medium text-gray-900">
+                  Freeze Leaderboard
+                </span>
+              </Switch.Label>
+            </Switch.Group>
+          </div>
         </div>
+        <Separator className="my-4" />
         <div className="flex flex-col gap-2">
-          <h1 className="text-center font-bold underline">Add/Remove Points</h1>
+          <h1 className="font-bold text-xl">Add/Remove Points</h1>
           <Select
             onValueChange={(value) => {
               if (value) {
@@ -375,7 +382,7 @@ function OC() {
           />
         </div>
         <Button
-          className="mx-auto px-6"
+          className="mx-auto px-6 bg-purple-800 hover:bg-purple-900 transition-colors mt-2 w-full"
           onClick={() => {
             submitForm();
           }}
@@ -383,35 +390,59 @@ function OC() {
           Submit
         </Button>
       </div>
-      <div id="logs" className="h-full pb-5 overflow-hidden">
+
+      <Separator className="my-4" />
+
+      <div id="logs" className="pb-5 overflow-hidden h-[75dvh]">
         <h1 className="text-xl font-bold pb-2">
-          Logs <span className="text-sm">[Note points are not exact]</span>
+          Logs
+          <span className="ml-4 text-sm italic text-red-600">
+            **Points are not exact
+          </span>
         </h1>
         <div className="h-full space-y-0.5 overflow-scroll pb-5">
           {logs.map((e, idx) => {
             return (
-              <div
-                className="min-h-16 bg-purple-300 rounded-lg p-2 flex flex-col justify-center"
-                key={"logs" + idx}
-              >
-                <span className="text-xs text-right">
-                  {normalise_date(e.created_at)}
-                </span>
-                <div className="flex items-center gap-2">
-                  <div className="flex gap-x-1.5 flex-wrap text-sm">
-                    <span className="font-bold">{e.foc_user.name}</span>
-                    <span>has {e.point >= 0 ? "awarded" : "penalised"}</span>
-                    <span className="font-bold">
-                      {"Group " + e.foc_group.id + ": " + e.foc_group.name}
-                    </span>
-                    <span className="font-bold">
+              <div className="flex flex-col min-h-16 bg-white border rounded-lg p-4">
+                <div
+                  className="flex flex-col justify-center"
+                  key={"logs" + idx}
+                >
+                  <div className="flex items-start justify-center space-x-4">
+                    <div className="flex gap-x-1.5 flex-wrap text-sm w-full">
+                      <span className="font-bold text-purple-800">
+                        {e.foc_user.name}
+                      </span>
+                      has
+                      <span
+                        className={
+                          e.point >= 0 ? "text-green-600" : "text-red-600"
+                        }
+                      >
+                        {e.point >= 0 ? "awarded" : "penalised"}
+                      </span>
+                      <span className="font-bold">
+                        {"Group " + e.foc_group.id + ": " + e.foc_group.name}
+                      </span>
+                      {/* <span className="font-bold">
+                        {(e.point >= 0 ? "+" : "") + e.point}
+                      </span> */}
+                      <span>for</span>
+                      <span className="font-bold text-gray-500">{e.foc_game.name}</span>
+                    </div>
+                    <span
+                      className={cn([
+                        "font-bold",
+                        e.point >= 0 ? "text-green-600" : "text-red-600",
+                      ])}
+                    >
                       {(e.point >= 0 ? "+" : "") + e.point}
                     </span>
-                    <span>for</span>
-                    <span className="font-bold">{e.foc_game.name}</span>
                   </div>
-                  <span className="font-bold">
-                    {(e.point >= 0 ? "+" : "") + e.point}
+                </div>
+                <div>
+                  <span className="text-xs text-right">
+                    {normalise_date(e.created_at)}
                   </span>
                 </div>
               </div>

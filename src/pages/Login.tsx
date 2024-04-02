@@ -61,8 +61,8 @@ export default function Login() {
 
   return (
     <div className="w-full h-full flex items-center justify-center">
-      <div className="flex items-center justify-center w-full sm:space-x-36">
-        <Card className="w-full max-w-sm">
+      <div className="flex items-center justify-center max-w-sm w-full px-4">
+        <Card className="w-full">
           <CardHeader>
             <CardTitle className="text-2xl text-center font-light">SOC FOC 24'</CardTitle>
             <CardTitle className="text-3xl text-center text-purple-900 tracking-wide font-bold">
@@ -94,8 +94,6 @@ export default function Login() {
             </Button>
           </CardFooter>
         </Card>
-
-        <img src="/login/machine.svg" className="max-w-sm w-full animate-float hidden sm:block"/>
       </div>
     </div>
   );

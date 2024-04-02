@@ -44,6 +44,21 @@ function Home() {
     }
   };
 
+  // async function getFreeze() {
+  //   const { data, error } = await supabase
+  //     .from("foc_state")
+  //     .select()
+  //     .eq("name", "freeze");
+  //   if (error) {
+  //     console.log(error);
+  //     return;
+  //   }
+  //   if (!data) {
+  //     return;
+  //   }
+  //   return setFreeze(data[0].state == "true");
+  // }
+
   useEffect(() => {
     getLeaderboard();
   }, []);
