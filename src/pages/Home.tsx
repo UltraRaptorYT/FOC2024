@@ -148,13 +148,7 @@ function Home() {
 
         <div className="flex items-center justify-center w-full max-w-sm pb-12 px-2">
           <Table className="w-full">
-            {leaderboard.length < 3 ? (
-              <TableCaption>
-                There are no other ranks at this time.
-              </TableCaption>
-            ) : (
-              <TableCaption>Current standing for SOC FOC 24'</TableCaption>
-            )}
+            <TableCaption>Current standing for SOC FOC 24'</TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[24px] text-black">Rank</TableHead>
@@ -165,9 +159,10 @@ function Home() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {(leaderboard ?? []).map((leader, index) => (
-                <LeaderboardRow key={index} {...leader} index={index} />
-              ))}
+              {!isLoading &&
+                (leaderboard ?? []).map((leader, index) => (
+                  <LeaderboardRow key={index} {...leader} index={index} />
+                ))}
             </TableBody>
           </Table>
         </div>
