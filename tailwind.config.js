@@ -30,11 +30,18 @@ module.exports = {
           "0%, 100%": { transform: "translateY(0) rotate(-3deg)" },
           "50%": { transform: "translateY(-5%) rotate(3deg)" },
         },
+        "appear": {
+          from: { opacity: "0" },
+          to: { opacity: "1" },
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "float": "float 3s ease-in-out infinite",
+        "appear-3": "appear 7.5s ease-in-out",
+        "appear-2": "appear 2.5s ease-in-out",
+        "appear-1": "appear 1s ease-in-out",
       },
     },
   },
