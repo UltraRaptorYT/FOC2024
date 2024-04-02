@@ -97,7 +97,7 @@ function GL() {
 
   return (
     <div className="flex flex-col items-center justify-start py-8 w-full min-h-[100dvh] h-full bg-gray-100">
-      <h1 className="text-3xl font-semibold">
+      <h1 className="text-3xl font-semibold text-center max-w-sm w-full truncate px-8">
         Hi, <span className="text-purple-800">{auth?.name}!</span>
       </h1>
 
