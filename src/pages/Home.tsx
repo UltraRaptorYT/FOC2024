@@ -49,8 +49,8 @@ function Home() {
   }, []);
 
   return (
-    <main className="min-h-[100dvh] bg-white flex flex-col space-y-12 items-center justify-around w-full max-w-sm">
-      <div className="flex flex-col pt-24">
+    <main className="min-h-[100dvh] bg-white flex flex-col space-y-6 items-center justify-around w-full max-w-sm">
+      <div className="flex flex-col pt-12">
         <h1 className="text-2xl text-center font-light">SOC FOC 24'</h1>
         <h1 className="text-3xl text-center text-purple-900 tracking-wide font-bold">
           BLINK IN TIME
@@ -60,7 +60,7 @@ function Home() {
       <img
         src="/leaderboard/delorean.svg"
         alt="machine"
-        className="max-w-sm w-full animate-float px-4"
+        className="max-w-sm w-full animate-float px-12"
       />
 
       <div className="w-full px-4">
@@ -178,17 +178,22 @@ const LeaderboardRow = ({
   total_points,
   index,
 }: Leaderboard & { index: number }) => {
-  const rank = index + 1;
+  const rank = total_points === 0 ? "NA" : index + 1;
   return (
     <TableRow>
       <TableCell className="text-center">
         <h1
           className={cn([
             "py-2 px-3 font-bold rounded-full",
-            rank === 1 && "bg-[#FFD700] text-yellow-800",
-            rank === 2 && "bg-[#C0C0C0] text-gray-700",
-            rank === 3 && "bg-[#B8860B] text-yellow-200",
-            rank > 3 && "bg-purple-100 text-purple-800",
+            rank === 1
+              ? "bg-[#FFD700] text-yellow-800"
+              : rank === 2
+              ? "bg-[#C0C0C0] text-gray-700"
+              : rank === 3
+              ? "bg-[#B8860B] text-yellow-200"
+              : rank === "NA"
+              ? "italic"
+              : "bg-purple-100 text-purple-800",
           ])}
         >
           {rank}
