@@ -47,7 +47,7 @@ export default function Login() {
       console.log(error);
       return toast.error(JSON.stringify(error));
     }
-    
+
     if (data.length == 0) {
       return toast.error("Admin No and Password not found");
     } else {
@@ -61,36 +61,42 @@ export default function Login() {
 
   return (
     <div className="w-full h-full flex items-center justify-center">
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle className="text-2xl text-center">SOC FOC 24'</CardTitle>
-          <CardTitle className="text-3xl text-center">BLINK IN TIME</CardTitle>
-          {/* <CardDescription>
+      <div className="flex items-center justify-center w-full sm:space-x-36">
+        <Card className="w-full max-w-sm">
+          <CardHeader>
+            <CardTitle className="text-2xl text-center font-light">SOC FOC 24'</CardTitle>
+            <CardTitle className="text-3xl text-center text-purple-900 tracking-wide font-bold">
+              BLINK IN TIME
+            </CardTitle>
+            {/* <CardDescription>
             Enter your  below to login to your account.
           </CardDescription> */}
-        </CardHeader>
-        <CardContent className="grid gap-4">
-          <div className="grid gap-2">
-            <Label htmlFor="admin">Admin No.</Label>
-            <Input
-              id="admin"
-              type="text"
-              placeholder="2100775"
-              required
-              ref={adminRef}
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" required ref={passwordRef} />
-          </div>
-        </CardContent>
-        <CardFooter>
-          <Button className="w-full" onClick={() => checkCredentials()}>
-            Login
-          </Button>
-        </CardFooter>
-      </Card>
+          </CardHeader>
+          <CardContent className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="admin">Admin No.</Label>
+              <Input
+                id="admin"
+                type="text"
+                placeholder="2100775"
+                required
+                ref={adminRef}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="password">Password</Label>
+              <Input id="password" type="password" placeholder="Password" required ref={passwordRef} />
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Button className="w-full bg-purple-900 hover:bg-purple-950 transition-colors" onClick={() => checkCredentials()}>
+              Login
+            </Button>
+          </CardFooter>
+        </Card>
+
+        <img src="/login/machine.svg" className="max-w-sm w-full animate-float hidden sm:block"/>
+      </div>
     </div>
   );
 }
