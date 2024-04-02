@@ -11,7 +11,7 @@ function GL() {
     if (!auth && !isLoading) {
       return navigate("/login");
     }
-    if (auth && auth.type != "GL") {
+    if (auth && !(auth.type == "GL" || auth.type == "OC")) {
       return navigate("/");
     }
   }, [auth, isLoading]);

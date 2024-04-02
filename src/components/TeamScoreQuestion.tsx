@@ -58,8 +58,6 @@ function TeamScoreQuestion({
       return;
     }
     if (data.length) {
-      setWinnerGroup(undefined);
-      setLoserGroup(undefined);
       return toast.success("Added points");
     }
   }

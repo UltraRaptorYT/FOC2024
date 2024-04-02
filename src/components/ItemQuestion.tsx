@@ -79,7 +79,6 @@ function ItemQuestion({
       return;
     }
     if (data.length) {
-      setGroup(undefined);
       setValue("");
       return toast.success("Items Added");
     }

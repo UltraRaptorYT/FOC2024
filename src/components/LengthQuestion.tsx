@@ -79,7 +79,6 @@ function LengthQuestion({
       return;
     }
     if (data.length) {
-      setGroup(undefined);
       setValue("");
       return toast.success("Time Recorded");
     }

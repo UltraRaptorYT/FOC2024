@@ -79,7 +79,6 @@ function AccurateQuestion({
       return;
     }
     if (data.length) {
-      setGroup(undefined);
       setValue("");
       return toast.success("Points added");
     }

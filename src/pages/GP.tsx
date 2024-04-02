@@ -90,7 +90,7 @@ function GP() {
         activity_id={8}
       ></LengthQuestion>
     ),
-    "Scavenger Odessey": (
+    "Scavenger Odyssey": (
       <ItemQuestion
         groups={groups}
         auth={auth}
@@ -177,6 +177,7 @@ function GP() {
         .eq("name", "game");
       if (error) {
         console.log(error);
+        return
       }
       if (!data) {
         return;
