@@ -1,5 +1,3 @@
-import { Button } from "@/components/ui/button";
-import useAuth from "@/hooks/useAuth";
 import { supabase } from "@/utils/supabase";
 import { Trophy } from "lucide-react";
 import { useEffect, useState } from "react";
