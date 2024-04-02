@@ -13,6 +13,8 @@ import { Label } from "@radix-ui/react-label";
 import { useState } from "react";
 import LengthQuestion from "@/components/LengthQuestion";
 import AccurateQuestion from "@/components/AccurateQuestion";
+import ItemQuestion from "@/components/ItemQuestion";
+import ApocalypseQuestion from "@/components/ApocalypseQuestion";
 import TeamScoreQuestion from "@/components/TeamScoreQuestion";
 
 function GP() {
@@ -88,12 +90,18 @@ function GP() {
         activity_id={8}
       ></LengthQuestion>
     ),
-    "Scavenger Odessey": <div>asda</div>,
+    "Scavenger Odessey": (
+      <ItemQuestion
+        groups={groups}
+        auth={auth}
+        min={1}
+        activity_id={9}
+      ></ItemQuestion>
+    ),
     Dodgeball: (
       <TeamScoreQuestion
         groups={groups}
         auth={auth}
-        min={1}
         activity_id={10}
       ></TeamScoreQuestion>
     ),
@@ -101,17 +109,22 @@ function GP() {
       <TeamScoreQuestion
         groups={groups}
         auth={auth}
-        min={1}
         activity_id={11}
       ></TeamScoreQuestion>
     ),
-    Apocalypse: <div>asda</div>,
+    Apocalypse: (
+      <ApocalypseQuestion
+        groups={groups}
+        auth={auth}
+        activity_id={12}
+      ></ApocalypseQuestion>
+    ),
     "Safeguarding The Blueprints": (
       <LengthQuestion
         groups={groups}
         auth={auth}
         min={1}
-        activity_id={1}
+        activity_id={13}
       ></LengthQuestion>
     ),
     "Leaky Pipes": (
@@ -119,7 +132,7 @@ function GP() {
         groups={groups}
         auth={auth}
         min={1}
-        activity_id={1}
+        activity_id={14}
       ></LengthQuestion>
     ),
     "Water Dunk": (
@@ -127,7 +140,7 @@ function GP() {
         groups={groups}
         auth={auth}
         min={1}
-        activity_id={1}
+        activity_id={15}
       ></LengthQuestion>
     ),
   };
@@ -137,7 +150,7 @@ function GP() {
     if (!auth && !isLoading) {
       return navigate("/login");
     }
-    if (auth && auth.type != "GP") {
+    if (auth && !(auth.type == "GP" || auth.type == "OC")) {
       return navigate("/");
     }
   }, [auth, isLoading]);
@@ -190,8 +203,17 @@ function GP() {
       setGroups(groups);
     }
 
-    const stateListener = supabase
-      .channel("custom-all-channel")
+    const channel = supabase
+      .channel("table-db-changes")
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "foc_group" },
+        (payload) => {
+          console.log("Change received!", payload);
+          getGames();
+          return;
+        }
+      )
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "foc_state" },
@@ -203,30 +225,18 @@ function GP() {
       )
       .subscribe();
 
-    const groupListener = supabase
-      .channel("custom-all-channel")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "foc_group" },
-        (payload) => {
-          console.log("Change received!", payload);
-          getGames();
-          return;
-        }
-      )
-      .subscribe();
-
     getGames();
     return () => {
-      stateListener.unsubscribe();
-      groupListener.unsubscribe();
+      channel.unsubscribe();
     };
   }, []);
 
   return (
     <div className="w-full max-w-sm mx-auto h-full px-3 py-8 flex flex-col gap-5">
       <div className="grid w-full max-w-sm items-center gap-2">
-        <Label htmlFor="test">Activity</Label>
+        <Label htmlFor="test" className="text-xl font-bold">
+          Activity
+        </Label>
         <Select
           onValueChange={(value) => {
             if (value) {
@@ -256,7 +266,7 @@ function GP() {
           </h1>
           <div className="text-xl font-bold">
             {activity &&
-              activityList.filter((e) => e.name == activity)[0].question}
+              activityList.filter((e) => e.name == activity)[0]?.question}
           </div>
         </div>
         {activity && activityMapper[activity]}

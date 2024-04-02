@@ -12,7 +12,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/utils/supabase";
 
-function LengthQuestion({
+function ItemQuestion({
   groups,
   auth,
   activity_id,
@@ -81,7 +81,7 @@ function LengthQuestion({
     if (data.length) {
       setGroup(undefined);
       setValue("");
-      return toast.success("Time Recorded");
+      return toast.success("Items Added");
     }
   }
 
@@ -123,7 +123,7 @@ function LengthQuestion({
         value={value == "" ? "" : value}
         type="number"
         id="number"
-        placeholder="Time Taken in Seconds"
+        placeholder="Number of items"
         min={min}
         max={max}
       />
@@ -134,4 +134,4 @@ function LengthQuestion({
   );
 }
 
-export default LengthQuestion;
+export default ItemQuestion;

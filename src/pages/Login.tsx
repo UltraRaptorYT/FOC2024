@@ -53,7 +53,7 @@ export default function Login() {
     } else {
       const user: User = data[0];
       login(user);
-      navigate("/");
+      navigate(`/${user.type}`);
 
       return toast.success("Login successful");
     }
