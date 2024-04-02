@@ -1,5 +1,5 @@
 import { supabase } from "@/utils/supabase";
-import { Trophy } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useEffect, useState } from "react";
 
 import {
@@ -12,6 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import { Info } from "lucide-react";
 
 type Leaderboard = {
   group_name: string;
@@ -48,17 +49,31 @@ function Home() {
   }, []);
 
   return (
-    <main className="min-h-[100dvh] bg-white flex flex-col items-center justify-around">
-      <div className="flex flex-col py-24">
+    <main className="min-h-[100dvh] bg-white flex flex-col space-y-12 items-center justify-around">
+      <div className="flex flex-col pt-24">
         <h1 className="text-2xl text-center font-light">SOC FOC 24'</h1>
         <h1 className="text-3xl text-center text-purple-900 tracking-wide font-bold">
           BLINK IN TIME
         </h1>
       </div>
 
+      <img
+        src="/leaderboard/delorean.svg"
+        alt="machine"
+        className="max-w-sm w-full animate-float px-4"
+      />
+
+      <Alert className="max-w-sm w-full px-2">
+        <Info className="h-4 w-4 stroke-red-600" />
+        <AlertTitle>Attention</AlertTitle>
+        <AlertDescription>
+          The leaderboard is currently frozen.
+        </AlertDescription>
+      </Alert>
+
       <div className="flex flex-col w-full items-center space-y-8">
-        <div className="flex items-end justify-center max-w-sm w-full px-2">
-          <div className="flex flex-col items-center flex-1">
+        {/* <div className="flex items-end justify-center max-w-sm w-full px-2"> */}
+        {/* <div className="flex flex-col items-center flex-1">
             <h1
               className={cn([
                 "w-24 h-12 overflow-auto text-center font-bold text-xl",
@@ -128,8 +143,8 @@ function Home() {
                 Pts
               </h1>
             </div>
-          </div>
-        </div>
+          </div> */}
+        {/* </div> */}
 
         <div className="flex items-center justify-center w-full max-w-sm pb-12 px-2">
           <Table className="w-full">
@@ -142,17 +157,17 @@ function Home() {
             )}
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[24px]">Rank</TableHead>
-                <TableHead>Group Name</TableHead>
-                <TableHead className="text-center">Total Points</TableHead>
+                <TableHead className="w-[24px] text-black">Rank</TableHead>
+                <TableHead className="text-black">Group Name</TableHead>
+                <TableHead className="text-center text-black">
+                  Total Points
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {(leaderboard.splice(3, leaderboard.length) ?? []).map(
-                (leader, index) => (
-                  <LeaderboardRow key={index} {...leader} index={index} />
-                )
-              )}
+              {(leaderboard ?? []).map((leader, index) => (
+                <LeaderboardRow key={index} {...leader} index={index} />
+              ))}
             </TableBody>
           </Table>
         </div>
@@ -166,16 +181,42 @@ const LeaderboardRow = ({
   total_points,
   index,
 }: Leaderboard & { index: number }) => {
-  const rank = index + 4;
+  const rank = index + 1;
   return (
     <TableRow>
       <TableCell className="text-center">
-        <h1 className="bg-purple-100 text-purple-800 py-2 px-3 font-bold rounded-full">
+        <h1
+          className={cn([
+            "py-2 px-3 font-bold rounded-full",
+            rank === 1 && "bg-[#FFD700] text-yellow-800",
+            rank === 2 && "bg-[#C0C0C0] text-gray-700",
+            rank === 3 && "bg-[#B8860B] text-yellow-200",
+            rank > 3 && "bg-purple-100 text-purple-800",
+          ])}
+        >
           {rank}
         </h1>
       </TableCell>
-      <TableCell>{group_name}</TableCell>
-      <TableCell className="text-center">{total_points}</TableCell>
+      <TableCell
+        className={cn([
+          "",
+          rank === 1 && "text-[#FFD700] font-bold",
+          rank === 2 && "text-[#C0C0C0] font-bold",
+          rank === 3 && "text-[#B8860B] font-bold",
+        ])}
+      >
+        {group_name}
+      </TableCell>
+      <TableCell
+        className={cn([
+          "text-center",
+          rank === 1 && "text-[#FFD700] font-bold",
+          rank === 2 && "text-[#C0C0C0] font-bold",
+          rank === 3 && "text-[#B8860B] font-bold",
+        ])}
+      >
+        {total_points}
+      </TableCell>
     </TableRow>
   );
 };

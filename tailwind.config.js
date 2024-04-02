@@ -27,8 +27,8 @@ module.exports = {
           to: { height: "0" },
         },
         "float": {
-          "0%, 100%": { transform: "translateY(0) rotate(-3deg)" },
-          "50%": { transform: "translateY(-5%) rotate(3deg)" },
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-5%)" },
         },
         "appear": {
           from: { opacity: "0" },
