@@ -49,7 +49,7 @@ function Home() {
   }, []);
 
   return (
-    <main className="min-h-[100dvh] bg-white flex flex-col space-y-12 items-center justify-around">
+    <main className="min-h-[100dvh] bg-white flex flex-col space-y-12 items-center justify-around w-full max-w-sm">
       <div className="flex flex-col pt-24">
         <h1 className="text-2xl text-center font-light">SOC FOC 24'</h1>
         <h1 className="text-3xl text-center text-purple-900 tracking-wide font-bold">
@@ -63,13 +63,15 @@ function Home() {
         className="max-w-sm w-full animate-float px-4"
       />
 
-      <Alert className="max-w-sm w-full px-4">
-        <Info className="h-4 w-4 stroke-red-600" />
-        <AlertTitle>Attention</AlertTitle>
-        <AlertDescription>
-          The leaderboard is currently frozen.
-        </AlertDescription>
-      </Alert>
+      <div className="w-full px-4">
+        <Alert className="w-full">
+          <Info className="h-4 w-4 stroke-red-600" />
+          <AlertTitle>Attention</AlertTitle>
+          <AlertDescription>
+            The leaderboard is currently frozen.
+          </AlertDescription>
+        </Alert>
+      </div>
 
       <div className="flex flex-col w-full items-center space-y-8">
         {/* <div className="flex items-end justify-center max-w-sm w-full px-2"> */}
@@ -146,7 +148,7 @@ function Home() {
           </div> */}
         {/* </div> */}
 
-        <div className="flex items-center justify-center w-full max-w-sm pb-12 px-2">
+        <div className="flex items-center justify-center w-full max-w-sm pb-12 px-4">
           <Table className="w-full">
             <TableCaption>Current standing for SOC FOC 24'</TableCaption>
             <TableHeader>
