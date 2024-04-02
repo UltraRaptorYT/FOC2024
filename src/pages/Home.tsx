@@ -63,7 +63,7 @@ function Home() {
         className="max-w-sm w-full animate-float px-4"
       />
 
-      <Alert className="max-w-sm w-full px-2">
+      <Alert className="max-w-sm w-full px-4">
         <Info className="h-4 w-4 stroke-red-600" />
         <AlertTitle>Attention</AlertTitle>
         <AlertDescription>
