@@ -260,12 +260,12 @@ function GP() {
           </SelectContent>
         </Select>
       </div>
-      <div className="flex flex-col gap-6 pt-2">
+      <div className="flex flex-col gap-6 pt-8">
         <div className="flex flex-col gap-2">
-          <h1 className="text-center font-bold text-xl underline underline-offset-2">
+          <h1 className="text-center font-bold text-2xl text-purple-800">
             {activity}
           </h1>
-          <div className="text-xl font-bold">
+          <div className="text-xl text-center">
             {activity &&
               activityList.filter((e) => e.name == activity)[0]?.question}
           </div>

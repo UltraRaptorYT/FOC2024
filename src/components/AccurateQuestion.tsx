@@ -126,7 +126,7 @@ function AccurateQuestion({
         min={min}
         max={max}
       />
-      <Button className="mx-auto px-6" onClick={() => submitForm()}>
+      <Button className="mx-auto px-6 bg-purple-800 hover:bg-purple-900 w-full" onClick={() => submitForm()}>
         Submit
       </Button>
     </>
