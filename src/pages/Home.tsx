@@ -49,7 +49,7 @@ function Home() {
 
   return (
     <main className="min-h-[100dvh] bg-white flex flex-col items-center justify-around">
-      <div className="flex flex-col">
+      <div className="flex flex-col py-24">
         <h1 className="text-2xl text-center font-light">SOC FOC 24'</h1>
         <h1 className="text-3xl text-center text-purple-900 tracking-wide font-bold">
           BLINK IN TIME
@@ -57,7 +57,7 @@ function Home() {
       </div>
 
       <div className="flex flex-col w-full items-center space-y-8">
-        <div className="flex items-end justify-center max-w-sm w-full">
+        <div className="flex items-end justify-center max-w-sm w-full px-2">
           <div className="flex flex-col items-center flex-1">
             <h1
               className={cn([
@@ -67,12 +67,19 @@ function Home() {
             >
               {isLoading ? "Loading..." : leaderboard[1].group_name ?? "NA"}
             </h1>
-            <div className="border-black border-b-0 bg-purple-600 pb-16 w-full relative">
+            <div className="border-black border-b-0 bg-purple-600 pb-10 w-full relative">
               <div className="px-2 py-5 bg-slate-100 rounded-full m-8">
                 <Trophy className="w-full stroke-gray-400" />
               </div>
 
               <div className="bg-purple-700 w-full h-2 absolute -top-1"></div>
+            </div>
+
+            <div className="bg-purple-600 w-full flex items-center justify-center pb-6">
+              <h1 className="px-6 py-1 bg-slate-100 text-sm text-gray-400">
+                {isLoading ? "Loading..." : leaderboard[1].total_points ?? "NA"}{" "}
+                Pts
+              </h1>
             </div>
           </div>
           <div className="flex flex-col items-center flex-1">
@@ -84,12 +91,18 @@ function Home() {
             >
               {isLoading ? "Loading..." : leaderboard[0].group_name ?? "NA"}
             </h1>
-            <div className="border-black border-b-0 bg-purple-700 pb-32 w-full relative">
+            <div className="border-black border-b-0 bg-purple-700 pb-24 w-full relative">
               <div className="px-2 py-5 bg-yellow-100 rounded-full m-8">
-                <Trophy className="w-full stroke-yellow-400" />
+                <Trophy className="w-full stroke-yellow-500" />
               </div>
 
               <div className="bg-purple-800 w-full h-2 absolute -top-1"></div>
+            </div>
+
+            <div className="bg-purple-700 w-full flex items-center justify-center pb-8">
+              <h1 className="px-6 py-1 bg-yellow-100 text-sm text-yellow-500">
+                {isLoading ? "Loading..." : leaderboard[0].total_points ?? "NA"} Pts
+              </h1>
             </div>
           </div>
           <div className="flex flex-col items-center flex-1">
@@ -108,10 +121,17 @@ function Home() {
 
               <div className="bg-purple-600 w-full h-2 absolute -top-1"></div>
             </div>
+
+            <div className="bg-purple-500 w-full flex items-center justify-center pb-4">
+              <h1 className="px-6 py-1 bg-[#B08D57] text-sm text-[#FFD700]">
+                {isLoading ? "Loading..." : leaderboard[2].total_points ?? "NA"}{" "}
+                Pts
+              </h1>
+            </div>
           </div>
         </div>
 
-        <div className="flex items-center justify-center w-full max-w-sm">
+        <div className="flex items-center justify-center w-full max-w-sm pb-12 px-2">
           <Table className="w-full">
             {leaderboard.length < 3 ? (
               <TableCaption>
@@ -128,7 +148,7 @@ function Home() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {(leaderboard.splice(2, leaderboard.length) ?? []).map(
+              {(leaderboard.splice(3, leaderboard.length) ?? []).map(
                 (leader, index) => (
                   <LeaderboardRow key={index} {...leader} index={index} />
                 )
