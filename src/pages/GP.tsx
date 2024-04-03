@@ -321,6 +321,9 @@ function GP() {
                   **Points are not exact
                 </span>
               </h1>
+              <span className="text-sm italic text-red-600">
+                Contact an OC if there is any issues with the points
+              </span>
               <div className="h-full space-y-0.5 overflow-scroll pb-5">
                 {logs.map((e, idx) => {
                   return (

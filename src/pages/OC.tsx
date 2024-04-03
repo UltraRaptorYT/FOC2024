@@ -19,6 +19,17 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import dayjs from "dayjs";
 import Logout from "@/components/Logout";
+import { Trash2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
 
 function OC() {
   const [logs, setLogs] = useState<any[]>([]);
@@ -55,6 +66,19 @@ function OC() {
       return navigate("/");
     }
   }, [auth, isLoading]);
+
+  async function confirmDelete(point_id: number) {
+    console.log(point_id);
+    const { error } = await supabase
+      .from("foc_points")
+      .delete()
+      .eq("id", point_id);
+    if (error) {
+      console.log(error);
+      return;
+    }
+    toast.success("Record removed");
+  }
 
   async function getFreeze() {
     const { data, error } = await supabase
@@ -320,7 +344,7 @@ function OC() {
                 Day 2 Games
               </label>
             </div>
-            <Switch.Group as="div" className="flex items-center pt-8">
+            <Switch.Group as="div" className="flex items-center pt-4">
               <Switch
                 checked={freeze}
                 onChange={(e) => {
@@ -348,7 +372,7 @@ function OC() {
             </Switch.Group>
           </div>
         </div>
-        <Separator className="my-4" />
+        <Separator className="my-2" />
         <div className="flex flex-col gap-2">
           <h1 className="font-bold text-xl">Add/Remove Points</h1>
           <Select
@@ -405,7 +429,7 @@ function OC() {
         </Button>
       </div>
 
-      <Separator className="my-4" />
+      <Separator className="my-2" />
 
       <div id="logs" className="pb-5 overflow-hidden h-[75dvh]">
         <h1 className="text-xl font-bold pb-2">
@@ -468,10 +492,42 @@ function OC() {
                   </div>
                 )}
 
-                <div>
+                <div className="w-full flex justify-between items-center">
                   <span className="text-xs text-right">
                     {dayjs(e.created_at).format("DD MMM YYYY, hh:mm:ss a")}
                   </span>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button size={"sm"}>
+                        <Trash2 className="w-4 aspect-square" />
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-md">
+                      <DialogHeader>
+                        <DialogTitle>Are you absolutely sure?</DialogTitle>
+                        <DialogDescription>
+                          This action cannot be undone. This will permanently
+                          delete the record and remove the data from our
+                          servers.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <DialogFooter className="sm:justify-start">
+                        <DialogClose asChild>
+                          <Button type="button" variant="secondary">
+                            Close
+                          </Button>
+                        </DialogClose>
+                        <DialogClose asChild>
+                          <Button
+                            type="button"
+                            onClick={() => confirmDelete(e.id)}
+                          >
+                            Confirm
+                          </Button>
+                        </DialogClose>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </div>
             );
