@@ -301,7 +301,7 @@ function GP() {
           </SelectContent>
         </Select>
       </div>
-      <div className="flex flex-col gap-6 pt-8">
+      <div className="flex flex-col gap-6 pt-6">
         <div className="flex flex-col gap-2">
           <h1 className="text-center font-bold text-2xl text-purple-800">
             {activity}
@@ -318,12 +318,12 @@ function GP() {
               <h1 className="text-xl font-bold pb-2">
                 Logs
                 <span className="ml-4 text-sm italic text-red-600">
-                  **Points are not exact
+                  **Score are for games not actual points
                 </span>
               </h1>
-              <span className="text-sm italic text-red-600">
-                Contact an OC if there is any issues with the points
-              </span>
+              <div className="text-sm italic text-red-600 text-center">
+                Contact an OC if there is any issues with the scores
+              </div>
               <div className="h-full space-y-0.5 overflow-scroll pb-5">
                 {logs.map((e, idx) => {
                   return (

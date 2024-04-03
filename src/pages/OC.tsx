@@ -435,7 +435,7 @@ function OC() {
         <h1 className="text-xl font-bold pb-2">
           Logs
           <span className="ml-4 text-sm italic text-red-600">
-            **Points are not exact
+            **Score are for games not actual points
           </span>
         </h1>
         <div className="h-full space-y-2 overflow-scroll pb-5">
