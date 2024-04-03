@@ -190,6 +190,7 @@ function Home() {
       )
       .subscribe();
 
+    getFreeze();
     getLeaderboard();
     return () => {
       channel.unsubscribe();
