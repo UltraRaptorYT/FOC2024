@@ -38,8 +38,10 @@ function Home() {
     if (!data) {
       return;
     }
-    setFreezeDate(new Date(data[0].created_at));
-    return setFreeze(data[0].state == "true");
+    return {
+      freeze: data[0].state == "true",
+      freezeDate: new Date(data[0].created_at),
+    };
   }
 
   async function getGroups(): Promise<any[]> {
@@ -81,8 +83,18 @@ function Home() {
       const groups = await getGroups();
       console.log(groups);
       setIsLoading(true);
+      const freezeObj = await getFreeze();
+
+      if (!freezeObj) {
+        throw "Freeze";
+      }
+
+      setFreeze(freezeObj.freeze);
+      setFreezeDate(freezeObj.freezeDate);
+
       const freezeDateTimeStamp = new Date(
-        freezeDate.getTime() - freezeDate.getTimezoneOffset() * 60000
+        freezeObj.freezeDate.getTime() -
+          freezeObj.freezeDate.getTimezoneOffset() * 60000
       );
       console.log(freezeDateTimeStamp);
       let { data, error } = await supabase
@@ -99,7 +111,7 @@ function Home() {
       }
 
       data = data.filter((e) => {
-        return new Date(e.created_at) < freezeDate;
+        return new Date(e.created_at) < freezeObj.freezeDate;
       });
 
       const groupedData = data.reduce((acc, obj) => {
@@ -246,7 +258,6 @@ function Home() {
         { event: "UPDATE", schema: "public", table: "foc_state" },
         (payload) => {
           console.log("Change received!", payload);
-          getFreeze();
           getLeaderboard();
           return;
         }
@@ -256,7 +267,6 @@ function Home() {
         { event: "UPDATE", schema: "public", table: "foc_group" },
         (payload) => {
           console.log("Change received!", payload);
-          getFreeze();
           getLeaderboard();
           return;
         }
@@ -266,14 +276,12 @@ function Home() {
         { event: "*", schema: "public", table: "foc_points" },
         (payload) => {
           console.log("Change received!", payload);
-          getFreeze();
           getLeaderboard();
           return;
         }
       )
       .subscribe();
 
-    getFreeze();
     getLeaderboard();
     return () => {
       channel.unsubscribe();
