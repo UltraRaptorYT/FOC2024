@@ -22,6 +22,22 @@ type Leaderboard = {
 function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [leaderboard, setLeaderboard] = useState<Leaderboard[]>([]);
+  const [freeze, setFreeze] = useState(false);
+
+  async function getFreeze() {
+    const { data, error } = await supabase
+      .from("foc_state")
+      .select()
+      .eq("name", "freeze");
+    if (error) {
+      console.log(error);
+      return;
+    }
+    if (!data) {
+      return;
+    }
+    return setFreeze(data[0].state == "true");
+  }
 
   const getLeaderboard = async () => {
     try {
@@ -60,11 +76,47 @@ function Home() {
   // }
 
   useEffect(() => {
+    const channel = supabase
+      .channel("table-db-changes")
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "foc_state" },
+        (payload) => {
+          console.log("Change received!", payload);
+          getFreeze();
+
+          return;
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "foc_group" },
+        (payload) => {
+          console.log("Change received!", payload);
+          // getLogs();
+
+          return;
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "foc_points" },
+        (payload) => {
+          console.log("Change received!", payload);
+          getFreeze();
+          return;
+        }
+      )
+      .subscribe();
+
     getLeaderboard();
+    return () => {
+      channel.unsubscribe();
+    };
   }, []);
 
   return (
-    <main className="min-h-[100dvh] bg-white flex flex-col space-y-6 items-center justify-around w-full max-w-sm">
+    <main className="min-h-[100dvh] bg-white flex flex-col space-y-6 items-center justify-around w-full max-w-sm mx-auto">
       <div className="flex flex-col pt-12">
         <h1 className="text-2xl text-center font-light">SOC FOC 24'</h1>
         <h1 className="text-3xl text-center text-purple-900 tracking-wide font-bold">
@@ -78,15 +130,17 @@ function Home() {
         className="max-w-sm w-full animate-float px-12"
       />
 
-      <div className="w-full px-4">
-        <Alert className="w-full">
-          <Info className="h-4 w-4 stroke-red-600" />
-          <AlertTitle>Attention</AlertTitle>
-          <AlertDescription>
-            The leaderboard is currently frozen.
-          </AlertDescription>
-        </Alert>
-      </div>
+      {freeze && (
+        <div className="w-full px-4">
+          <Alert className="w-full">
+            <Info className="h-4 w-4 stroke-red-600" />
+            <AlertTitle>Attention</AlertTitle>
+            <AlertDescription>
+              The leaderboard is currently frozen.
+            </AlertDescription>
+          </Alert>
+        </div>
+      )}
 
       <div className="flex flex-col w-full items-center space-y-8">
         {/* <div className="flex items-end justify-center max-w-sm w-full px-2"> */}
