@@ -164,43 +164,64 @@ function Home() {
           let mapped = activityMapper[row.game as number];
           if (mapped == "add") {
             point = row.point;
+            currentScore += point;
+          } else if (mapped == "rank") {
+            let pointArr = [10, 8, 6, 4, 2, 1];
+            let gamePoint = [
+              ...new Set(
+                gameData[row.game]
+                  .map((e) => {
+                    return e.max;
+                  })
+                  .sort((a, b) => a - b)
+              ),
+            ];
+            let index = gamePoint.findIndex((e) => e == row.point);
+            if (index > pointArr.length - 1) {
+              point = pointArr[pointArr.length - 1];
+            } else {
+              point = pointArr[index];
+            }
+            // console.log(point);
+            // console.log(gameData[row.game].sort((a, b) => a.max - b.max));
+          } else if (mapped == "rank2") {
+            let pointArr = [15, 10, 7, 4];
+            let gamePoint = [
+              ...new Set(
+                gameData[row.game]
+                  .map((e) => {
+                    return e.max;
+                  })
+                  .sort((a, b) => a - b)
+              ),
+            ];
+            let index = gamePoint.findIndex((e) => e == row.point);
+            if (index > pointArr.length - 1) {
+              point = pointArr[pointArr.length - 1];
+            } else {
+              point = pointArr[index];
+            }
+          } else if (mapped == "short") {
+            let pointArr = [10, 8, 6, 4, 2, 1];
+            let gamePoint = [
+              ...new Set(
+                gameData[row.game]
+                  .map((e) => {
+                    return e.max;
+                  })
+                  .sort((a, b) => b - a)
+              ),
+            ];
+            let index = gamePoint.findIndex((e) => e == row.point);
+            if (index > pointArr.length - 1) {
+              point = pointArr[pointArr.length - 1];
+            } else {
+              point = pointArr[index];
+            }
           }
-          // } else if (mapped == "rank") {
-          //   let pointArr = [10, 8, 6, 4, 2, 1];
-          //   let index = gameData[row.game]
-          //     .sort((a, b) => a.max - b.max)
-          //     .findIndex((e) => e.group == row.group);
-          //   if (index > pointArr.length - 1) {
-          //     point = pointArr[pointArr.length - 1];
-          //   } else {
-          //     point = pointArr[index];
-          //   }
-          //   // console.log(point);
-          //   // console.log(gameData[row.game].sort((a, b) => a.max - b.max));
-          // } else if (mapped == "rank2") {
-          //   let pointArr = [15, 10, 7, 4];
-          //   let index = gameData[row.game]
-          //     .sort((a, b) => a.max - b.max)
-          //     .findIndex((e) => e.group == row.group);
-          //   if (index > pointArr.length - 1) {
-          //     point = pointArr[pointArr.length - 1];
-          //   } else {
-          //     point = pointArr[index];
-          //   }
           // } else if (mapped == "short") {
-          //   let pointArr = [10, 8, 6, 4, 2, 1];
-          //   let index = gameData[row.game]
-          //     .sort((a, b) => b.max - a.max)
-          //     .findIndex((e) => e.group == row.group);
-          //   if (index > pointArr.length - 1) {
-          //     point = pointArr[pointArr.length - 1];
-          //   } else {
-          //     point = pointArr[index];
-          //   }
-          // }
           // console.log(row, point);
           checkingData[group.id][row.game].push(point);
-          currentScore += point;
         }
         // let group = groups.
         leaderboardDict[
