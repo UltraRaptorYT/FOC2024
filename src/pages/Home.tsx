@@ -384,7 +384,11 @@ function Home() {
 
         <div className="flex items-center justify-center w-full max-w-sm pb-12 px-4">
           <Table className="w-full">
-            <TableCaption>Current standing for SOC FOC 24'</TableCaption>
+            <TableCaption>
+              {isLoading
+                ? "Loading Leaderboard..."
+                : "Current standing for SOC FOC 24'"}
+            </TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[24px] text-black">Rank</TableHead>
@@ -427,9 +431,9 @@ const LeaderboardRow = ({
               ? "bg-[#C0C0C0] text-gray-700"
               : rank === 3
               ? "bg-[#B8860B] text-yellow-200"
-              // : rank === "NA"
-              // ? "italic"
-              : "bg-purple-100 text-purple-800",
+              : // : rank === "NA"
+                // ? "italic"
+                "bg-purple-100 text-purple-800",
           ])}
         >
           {rank}
