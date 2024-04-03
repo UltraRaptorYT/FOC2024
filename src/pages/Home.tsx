@@ -91,6 +91,8 @@ function Home() {
       if (!data) {
         return;
       }
+
+      console.log(data)
       const leaderboardDict: { [key: string]: number } = {};
       for (let group of groups) {
         let currentScore = 0;
