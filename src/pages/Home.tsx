@@ -24,7 +24,6 @@ function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [leaderboard, setLeaderboard] = useState<Leaderboard[]>([]);
   const [freeze, setFreeze] = useState(false);
-  const [freezeDate, setFreezeDate] = useState<Date>(new Date());
 
   async function getFreeze() {
     const { data, error } = await supabase
@@ -90,7 +89,6 @@ function Home() {
       }
 
       setFreeze(freezeObj.freeze);
-      setFreezeDate(freezeObj.freezeDate);
 
       const freezeDateTimeStamp = new Date(
         freezeObj.freezeDate.getTime() -
