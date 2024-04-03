@@ -23,6 +23,7 @@ function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [leaderboard, setLeaderboard] = useState<Leaderboard[]>([]);
   const [freeze, setFreeze] = useState(false);
+  const [freezeDate, setFreezeDate] = useState<Date>();
 
   async function getFreeze() {
     const { data, error } = await supabase
@@ -36,13 +37,52 @@ function Home() {
     if (!data) {
       return;
     }
+    setFreezeDate(new Date(data[0].created_at));
     return setFreeze(data[0].state == "true");
   }
 
+  async function getGroups(): Promise<any[]> {
+    const { data, error } = await supabase
+      .from("foc_group")
+      .select()
+      .order("id", { ascending: true });
+    if (error) {
+      console.log(error);
+    }
+    if (!data) {
+      return [];
+    }
+    return data;
+  }
+
+  const activityMapper: { [key: number]: "rank" | "add" | "" } = {
+    1: "rank",
+    2: "",
+    3: "",
+    4: "",
+    5: "",
+    6: "",
+    7: "",
+    8: "",
+    9: "",
+    10: "",
+    11: "",
+    12: "add",
+    13: "",
+    14: "",
+    15: "",
+    16: "add",
+  };
+
   const getLeaderboard = async () => {
     try {
+      const groups = await getGroups();
+      console.log(groups);
       setIsLoading(true);
-      const { data, error } = await supabase.rpc("get_foc_leaderboard");
+      const { data, error } = await supabase
+        .from("foc_points")
+        .select("*, foc_user(*), foc_group(*), foc_game(*)")
+        .order("created_at", { ascending: false });
 
       if (error) {
         throw error;
@@ -51,13 +91,53 @@ function Home() {
       if (!data) {
         return;
       }
-
-      setLeaderboard(data);
+      const leaderboardDict: { [key: string]: number } = {};
+      for (let group of groups) {
+        let currentScore = 0;
+        for (let row of data) {
+          if (row.group != group.id) continue;
+          let mapped = activityMapper[row.game as number];
+          if (mapped == "add") {
+            currentScore += row.point;
+          } else if (mapped == "rank") {
+          }
+        }
+        leaderboardDict[group.name as string] = currentScore;
+      }
+      console.log(leaderboardDict);
+      const result = Object.entries(leaderboardDict).map(
+        ([groupName, score]) => ({
+          group_name: groupName,
+          total_points: score,
+        })
+      );
+      result.sort((a, b) => {
+        return b.total_points - a.total_points;
+      });
+      setLeaderboard(result);
     } catch (e) {
       console.log(e);
     } finally {
       setIsLoading(false);
     }
+    // try {
+    //   setIsLoading(true);
+    //   const { data, error } = await supabase.rpc("get_foc_leaderboard");
+
+    //   if (error) {
+    //     throw error;
+    //   }
+
+    //   if (!data) {
+    //     return;
+    //   }
+
+    //   setLeaderboard(data);
+    // } catch (e) {
+    //   console.log(e);
+    // } finally {
+    //   setIsLoading(false);
+    // }
   };
 
   // async function getFreeze() {
@@ -84,7 +164,7 @@ function Home() {
         (payload) => {
           console.log("Change received!", payload);
           getFreeze();
-
+          getLeaderboard();
           return;
         }
       )
@@ -93,8 +173,8 @@ function Home() {
         { event: "UPDATE", schema: "public", table: "foc_group" },
         (payload) => {
           console.log("Change received!", payload);
-          // getLogs();
-
+          getFreeze();
+          getLeaderboard();
           return;
         }
       )
@@ -104,6 +184,7 @@ function Home() {
         (payload) => {
           console.log("Change received!", payload);
           getFreeze();
+          getLeaderboard();
           return;
         }
       )

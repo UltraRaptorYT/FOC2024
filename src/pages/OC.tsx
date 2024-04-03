@@ -153,6 +153,7 @@ function OC() {
       .from("foc_state")
       .update({
         state: freeze ? "false" : "true",
+        created_at: new Date(),
       })
       .eq("name", "freeze")
       .select();
@@ -428,7 +429,9 @@ function OC() {
                         {(e.point >= 0 ? "+" : "") + e.point}
                       </span> */}
                       <span>for</span>
-                      <span className="font-bold text-gray-500">{e.foc_game.name}</span>
+                      <span className="font-bold text-gray-500">
+                        {e.foc_game.name}
+                      </span>
                     </div>
                     <span
                       className={cn([
