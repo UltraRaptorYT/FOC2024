@@ -16,6 +16,8 @@ import {
 import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
+import dayjs from "dayjs";
 
 function OC() {
   const [logs, setLogs] = useState<any[]>([]);
@@ -24,6 +26,7 @@ function OC() {
   const [groups, setGroups] = useState<any[]>([]);
   const [group, setGroup] = useState<string>();
   const [value, setValue] = useState<number | "">("");
+  const [remarks, setRemarks] = useState<string>("");
 
   const [day1Game, setDay1Game] = useState<boolean>(false);
   const [day2Game, setDay2Game] = useState<boolean>(false);
@@ -105,6 +108,7 @@ function OC() {
           group: group,
           game: 16,
           point: value,
+          remarks: remarks,
         },
       ])
       .select();
@@ -114,10 +118,15 @@ function OC() {
       return;
     }
     if (data.length) {
+      setRemarks("");
       setValue("");
       return toast.success("Points Added");
     }
   }
+
+  useEffect(() => {
+    console.log(group);
+  }, [group]);
 
   async function updateGameState() {
     let state = [];
@@ -173,6 +182,7 @@ function OC() {
         .from("foc_points")
         .select("*, foc_user(*), foc_group(*), foc_game(*)")
         .order("created_at", { ascending: false });
+
       if (error) {
         console.log(error);
         return;
@@ -227,18 +237,18 @@ function OC() {
     };
   }, []);
 
-  function normalise_date(date: string) {
-    let timestamp = new Date(date);
-    const options: Intl.DateTimeFormatOptions = {
-      day: "numeric",
-      month: "long",
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    };
-    const formattedTimestamp = timestamp.toLocaleDateString("en-UK", options);
-    return formattedTimestamp;
-  }
+  // function normalise_date(date: string) {
+  //   let timestamp = new Date(date);
+  //   const options: Intl.DateTimeFormatOptions = {
+  //     day: "numeric",
+  //     month: "long",
+  //     hour: "numeric",
+  //     minute: "2-digit",
+  //     hour12: true,
+  //   };
+  //   const formattedTimestamp = timestamp.toLocaleDateString("en-UK", options);
+  //   return formattedTimestamp;
+  // }
 
   async function getGroups(): Promise<any[]> {
     const { data, error } = await supabase
@@ -266,7 +276,7 @@ function OC() {
             <h1 className="text-xl font-bold">Activate Games</h1>
             <div className="flex items-center space-x-2">
               <Checkbox
-                className="data-[state=checked]:bg-purple-800 h-6 w-6"
+                className="data-[state=checked]:bg-purple-800 h-6 w-6 rounded-md"
                 id="day1Game"
                 checked={day1Game}
                 onCheckedChange={(e: boolean) => {
@@ -282,7 +292,7 @@ function OC() {
             </div>
             <div className="flex items-center space-x-2">
               <Checkbox
-                className="data-[state=checked]:bg-purple-800 h-6 w-6"
+                className="data-[state=checked]:bg-purple-800 h-6 w-6 rounded-md"
                 id="scavenger"
                 checked={scavenger}
                 onCheckedChange={(e: boolean) => {
@@ -298,7 +308,7 @@ function OC() {
             </div>
             <div className="flex items-center space-x-2">
               <Checkbox
-                className="data-[state=checked]:bg-purple-800 h-6 w-6"
+                className="data-[state=checked]:bg-purple-800 h-6 w-6 rounded-md"
                 id="day2Game"
                 checked={day2Game}
                 onCheckedChange={(e: boolean) => {
@@ -381,6 +391,11 @@ function OC() {
             id="number"
             placeholder="Points Awarded/Deducted"
           />
+          <Textarea
+            placeholder="Additional Remarks (optional)"
+            value={remarks}
+            onChange={(e) => setRemarks(e.target.value)}
+          />
         </div>
         <Button
           className="mx-auto px-6 bg-purple-800 hover:bg-purple-900 transition-colors mt-2 w-full"
@@ -401,7 +416,7 @@ function OC() {
             **Points are not exact
           </span>
         </h1>
-        <div className="h-full space-y-0.5 overflow-scroll pb-5">
+        <div className="h-full space-y-2 overflow-scroll pb-5">
           {logs.map((e, idx) => {
             return (
               <div className="flex flex-col min-h-16 bg-white border rounded-lg p-4">
@@ -411,14 +426,15 @@ function OC() {
                 >
                   <div className="flex items-start justify-center space-x-4">
                     <div className="flex gap-x-1.5 flex-wrap text-sm w-full">
-                      <span className="font-bold text-purple-800">
+                      <span className="font-bold text-purple-800 uppercase">
                         {e.foc_user.name}
                       </span>
                       has
                       <span
-                        className={
-                          e.point >= 0 ? "text-green-600" : "text-red-600"
-                        }
+                        className={cn([
+                          e.point >= 0 ? "text-green-600" : "text-red-600",
+                          "font-semibold",
+                        ])}
                       >
                         {e.point >= 0 ? "awarded" : "penalised"}
                       </span>
@@ -443,9 +459,20 @@ function OC() {
                     </span>
                   </div>
                 </div>
+                {e.remarks && (
+                  <div className="py-4">
+                    <span className="text-xs font-bold">
+                      Additional Remarks
+                    </span>
+                    <p className="italic text-xs bg-slate-100 p-2 break-words ">
+                      {e.remarks}
+                    </p>
+                  </div>
+                )}
+
                 <div>
                   <span className="text-xs text-right">
-                    {normalise_date(e.created_at)}
+                    {dayjs(e.created_at).format("DD MMM YYYY, hh:mm:ss a")}
                   </span>
                 </div>
               </div>
