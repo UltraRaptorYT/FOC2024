@@ -17,6 +17,7 @@ import ItemQuestion from "@/components/ItemQuestion";
 import ApocalypseQuestion from "@/components/ApocalypseQuestion";
 import TeamScoreQuestion from "@/components/TeamScoreQuestion";
 import Logout from "@/components/Logout";
+import { cn } from "@/lib/utils";
 
 function GP() {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ function GP() {
   const [groups, setGroups] = useState<any[]>([]);
   const [activity, setActivity] = useState<string>("");
   const { auth, isLoading } = useAuth();
+  const [logs, setLogs] = useState<any[]>([]);
 
   const activityMapper: { [key: string]: ReactNode } = {
     "Memory Sports Club": (
@@ -146,6 +148,19 @@ function GP() {
     ),
   };
 
+  function normalise_date(date: string) {
+    let timestamp = new Date(date);
+    const options: Intl.DateTimeFormatOptions = {
+      day: "numeric",
+      month: "long",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    };
+    const formattedTimestamp = timestamp.toLocaleDateString("en-UK", options);
+    return formattedTimestamp;
+  }
+
   useEffect(() => {
     console.log(auth);
     if (!auth && !isLoading) {
@@ -155,6 +170,29 @@ function GP() {
       return navigate("/");
     }
   }, [auth, isLoading]);
+
+  async function getLogs(game_name: string) {
+    const { data, error } = await supabase
+      .from("foc_points")
+      .select("*, foc_user(*), foc_group(*), foc_game(*)")
+      .order("created_at", { ascending: false });
+    console.log(data);
+    // const { data, error } = await supabase
+    //   .from("foc_points")
+    //   .select("*, foc_user(*), foc_group(*), foc_game(*)")
+    //   .order("created_at", { ascending: false })
+    //   .eq("foc_user.admin", 2100775);
+    if (error) {
+      console.log(error);
+      return;
+    }
+    if (!data) {
+      return;
+    }
+    let available = data?.filter((e) => e.foc_game.name == game_name);
+    console.log(available);
+    setLogs(available);
+  }
 
   useEffect(() => {
     async function getGroups(): Promise<any[]> {
@@ -244,6 +282,7 @@ function GP() {
           onValueChange={(value) => {
             if (value) {
               setActivity(value);
+              getLogs(value);
             }
           }}
         >
@@ -273,6 +312,72 @@ function GP() {
           </div>
         </div>
         {activity && activityMapper[activity]}
+        {activity && (
+          <div>
+            <div id="logs" className="pb-5 overflow-hidden h-[200px]">
+              <h1 className="text-xl font-bold pb-2">
+                Logs
+                <span className="ml-4 text-sm italic text-red-600">
+                  **Points are not exact
+                </span>
+              </h1>
+              <div className="h-full space-y-0.5 overflow-scroll pb-5">
+                {logs.map((e, idx) => {
+                  return (
+                    <div className="flex flex-col min-h-16 bg-white border rounded-lg p-4">
+                      <div
+                        className="flex flex-col justify-center"
+                        key={"logs" + idx}
+                      >
+                        <div className="flex items-start justify-center space-x-4">
+                          <div className="flex gap-x-1.5 flex-wrap text-sm w-full">
+                            <span className="font-bold text-purple-800">
+                              {e.foc_user.name}
+                            </span>
+                            has
+                            <span
+                              className={
+                                e.point >= 0 ? "text-green-600" : "text-red-600"
+                              }
+                            >
+                              {e.point >= 0 ? "awarded" : "penalised"}
+                            </span>
+                            <span className="font-bold">
+                              {"Group " +
+                                e.foc_group.id +
+                                ": " +
+                                e.foc_group.name}
+                            </span>
+                            {/* <span className="font-bold">
+                        {(e.point >= 0 ? "+" : "") + e.point}
+                      </span> */}
+                            <span>for</span>
+                            <span className="font-bold text-gray-500">
+                              {e.foc_game.name}
+                            </span>
+                          </div>
+                          <span
+                            className={cn([
+                              "font-bold",
+                              e.point >= 0 ? "text-green-600" : "text-red-600",
+                            ])}
+                          >
+                            {(e.point >= 0 ? "+" : "") + e.point}
+                          </span>
+                        </div>
+                      </div>
+                      <div>
+                        <span className="text-xs text-right">
+                          {normalise_date(e.created_at)}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
