@@ -23,7 +23,7 @@ function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [leaderboard, setLeaderboard] = useState<Leaderboard[]>([]);
   const [freeze, setFreeze] = useState(false);
-  const [freezeDate, setFreezeDate] = useState<Date>();
+  const [_, setFreezeDate] = useState<Date>();
 
   async function getFreeze() {
     const { data, error } = await supabase
