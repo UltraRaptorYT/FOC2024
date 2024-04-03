@@ -309,7 +309,7 @@ function Home() {
       result.sort((a, b) => {
         return b.total_points - a.total_points;
       });
-      const finalLeaderboard = result.map((e, idx) => {
+      const finalLeaderboard = result.map((e) => {
         let final: Leaderboard = { ...e };
         final.group_id = groups.filter((i) => i.name == e.group_name)[0]["id"];
         return final;
