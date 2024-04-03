@@ -1,7 +1,6 @@
 import useAuth from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 import { LogOut } from "lucide-react";
-import React from "react";
 
 type Props = {
   className?: string;
