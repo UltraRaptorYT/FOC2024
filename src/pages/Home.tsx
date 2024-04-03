@@ -125,6 +125,8 @@ function Home() {
 
       console.log(groupedData);
 
+      const checkingData: { [key: number]: any } = {};
+
       const groupedArray = Object.entries(groupedData).map(([key, value]) => ({
         group: parseInt(key.split("-")[0]),
         game: parseInt(key.split("-")[1]),
@@ -147,53 +149,137 @@ function Home() {
       });
 
       console.log(gameData);
+
       const leaderboardDict: { [key: string]: number } = {};
+
       for (let group of groups) {
         let currentScore = 0;
+        checkingData[group.id as number] = {};
         for (let row of data) {
+          if (checkingData[group.id][row.game] == undefined) {
+            checkingData[group.id][row.game] = [];
+          }
           let point = 0;
           if (row.group != group.id) continue;
           let mapped = activityMapper[row.game as number];
           if (mapped == "add") {
             point = row.point;
-          } else if (mapped == "rank") {
+          }
+          // } else if (mapped == "rank") {
+          //   let pointArr = [10, 8, 6, 4, 2, 1];
+          //   let index = gameData[row.game]
+          //     .sort((a, b) => a.max - b.max)
+          //     .findIndex((e) => e.group == row.group);
+          //   if (index > pointArr.length - 1) {
+          //     point = pointArr[pointArr.length - 1];
+          //   } else {
+          //     point = pointArr[index];
+          //   }
+          //   // console.log(point);
+          //   // console.log(gameData[row.game].sort((a, b) => a.max - b.max));
+          // } else if (mapped == "rank2") {
+          //   let pointArr = [15, 10, 7, 4];
+          //   let index = gameData[row.game]
+          //     .sort((a, b) => a.max - b.max)
+          //     .findIndex((e) => e.group == row.group);
+          //   if (index > pointArr.length - 1) {
+          //     point = pointArr[pointArr.length - 1];
+          //   } else {
+          //     point = pointArr[index];
+          //   }
+          // } else if (mapped == "short") {
+          //   let pointArr = [10, 8, 6, 4, 2, 1];
+          //   let index = gameData[row.game]
+          //     .sort((a, b) => b.max - a.max)
+          //     .findIndex((e) => e.group == row.group);
+          //   if (index > pointArr.length - 1) {
+          //     point = pointArr[pointArr.length - 1];
+          //   } else {
+          //     point = pointArr[index];
+          //   }
+          // }
+          // console.log(row, point);
+          checkingData[group.id][row.game].push(point);
+          currentScore += point;
+        }
+        // let group = groups.
+        leaderboardDict[
+          groups.filter((e) => e.id == group.id)[0].name as string
+        ] = currentScore;
+      }
+
+      for (let [game_id, game] of Object.entries(gameData)) {
+        // console.log(game_id, game);
+        let game_type = activityMapper[Number(game_id)];
+        // console.log(game_type);
+        if (game_type == "add") {
+          continue;
+        }
+
+        let point = 0;
+        let count = 0;
+        for (let group of game) {
+          count++;
+          if (game_type == "rank") {
             let pointArr = [10, 8, 6, 4, 2, 1];
-            let index = gameData[row.game]
-              .sort((a, b) => a.max - b.max)
-              .findIndex((e) => e.group == row.group);
+            let gamePoint = [
+              ...new Set(
+                game
+                  .map((e) => {
+                    return e.max;
+                  })
+                  .sort((a, b) => a - b)
+              ),
+            ];
+            let index = gamePoint.findIndex((e) => e == group.max);
             if (index > pointArr.length - 1) {
               point = pointArr[pointArr.length - 1];
             } else {
               point = pointArr[index];
             }
-            // console.log(point);
-            // console.log(gameData[row.game].sort((a, b) => a.max - b.max));
-          } else if (mapped == "rank2") {
+          } else if (game_type == "rank2") {
             let pointArr = [15, 10, 7, 4];
-            let index = gameData[row.game]
-              .sort((a, b) => a.max - b.max)
-              .findIndex((e) => e.group == row.group);
+            let gamePoint = [
+              ...new Set(
+                game
+                  .map((e) => {
+                    return e.max;
+                  })
+                  .sort((a, b) => a - b)
+              ),
+            ];
+            let index = gamePoint.findIndex((e) => e == group.max);
             if (index > pointArr.length - 1) {
               point = pointArr[pointArr.length - 1];
             } else {
               point = pointArr[index];
             }
-          } else if (mapped == "short") {
+          } else if (game_type == "short") {
             let pointArr = [10, 8, 6, 4, 2, 1];
-            let index = gameData[row.game]
-              .sort((a, b) => b.max - a.max)
-              .findIndex((e) => e.group == row.group);
+            let gamePoint = [
+              ...new Set(
+                game
+                  .map((e) => {
+                    return e.max;
+                  })
+                  .sort((a, b) => b - a)
+              ),
+            ];
+            let index = gamePoint.findIndex((e) => e == group.max);
             if (index > pointArr.length - 1) {
               point = pointArr[pointArr.length - 1];
             } else {
               point = pointArr[index];
             }
           }
-          console.log(row, point);
-          currentScore += point;
+          leaderboardDict[
+            groups.filter((e) => e.id == group.group)[0].name as string
+          ] += point;
+          // leaderboardDict[group.name as string] += point;
         }
-        leaderboardDict[group.name as string] = currentScore;
       }
+
+      console.log(checkingData);
       console.log(leaderboardDict);
       const result = Object.entries(leaderboardDict).map(
         ([groupName, score]) => ({
@@ -204,7 +290,7 @@ function Home() {
       result.sort((a, b) => {
         return b.total_points - a.total_points;
       });
-      const finalLeaderboard = result.map((e) => {
+      const finalLeaderboard = result.map((e, idx) => {
         let final: Leaderboard = { ...e };
         final.group_id = groups.filter((i) => i.name == e.group_name)[0]["id"];
         return final;
