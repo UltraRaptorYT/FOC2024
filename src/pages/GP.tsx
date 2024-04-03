@@ -16,6 +16,7 @@ import AccurateQuestion from "@/components/AccurateQuestion";
 import ItemQuestion from "@/components/ItemQuestion";
 import ApocalypseQuestion from "@/components/ApocalypseQuestion";
 import TeamScoreQuestion from "@/components/TeamScoreQuestion";
+import Logout from "@/components/Logout";
 
 function GP() {
   const navigate = useNavigate();
@@ -177,7 +178,7 @@ function GP() {
         .eq("name", "game");
       if (error) {
         console.log(error);
-        return
+        return;
       }
       if (!data) {
         return;
@@ -234,6 +235,7 @@ function GP() {
 
   return (
     <div className="w-full max-w-sm mx-auto h-full px-3 py-8 flex flex-col gap-5">
+      <Logout />
       <div className="grid w-full max-w-sm items-center gap-2">
         <Label htmlFor="test" className="text-xl font-bold">
           Activity

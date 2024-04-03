@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import dayjs from "dayjs";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import Logout from "@/components/Logout";
 
 type Group = {
   id: number;
@@ -97,6 +98,7 @@ function GL() {
 
   return (
     <div className="flex flex-col items-center justify-start py-8 w-full min-h-[100dvh] h-full bg-gray-100">
+      <Logout />
       <h1 className="text-3xl font-semibold text-center max-w-sm w-full truncate px-8">
         Hi, <span className="text-purple-800">{auth?.name}!</span>
       </h1>

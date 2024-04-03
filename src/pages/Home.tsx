@@ -413,21 +413,22 @@ const LeaderboardRow = ({
   total_points,
   index,
 }: Leaderboard & { index: number }) => {
-  const rank = total_points === 0 ? "NA" : index + 1;
+  // const rank = total_points === 0 ? "NA" : index + 1;
+  const rank = index + 1;
   return (
     <TableRow>
       <TableCell className="text-center">
         <h1
           className={cn([
-            "py-2 px-3 font-bold rounded-full",
+            "h-8 w-8 grid place-items-center font-bold rounded-full",
             rank === 1
               ? "bg-[#FFD700] text-yellow-800"
               : rank === 2
               ? "bg-[#C0C0C0] text-gray-700"
               : rank === 3
               ? "bg-[#B8860B] text-yellow-200"
-              : rank === "NA"
-              ? "italic"
+              // : rank === "NA"
+              // ? "italic"
               : "bg-purple-100 text-purple-800",
           ])}
         >

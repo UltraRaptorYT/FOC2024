@@ -18,6 +18,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import dayjs from "dayjs";
+import Logout from "@/components/Logout";
 
 function OC() {
   const [logs, setLogs] = useState<any[]>([]);
@@ -123,10 +124,6 @@ function OC() {
       return toast.success("Points Added");
     }
   }
-
-  useEffect(() => {
-    console.log(group);
-  }, [group]);
 
   async function updateGameState() {
     let state = [];
@@ -270,6 +267,7 @@ function OC() {
 
   return (
     <div className="w-full max-w-sm mx-auto min-h-[100dvh] px-3 py-5 flex flex-col gap-5">
+      <Logout />
       <div className="flex flex-col gap-2">
         <div className="flex justify-between">
           <div className="flex gap-2 flex-col">
