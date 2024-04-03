@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import { Info } from "lucide-react";
 
 type Leaderboard = {
+  group_id?: number;
   group_name: string;
   total_points: number;
 };
@@ -160,7 +161,6 @@ function Home() {
             let index = gameData[row.game]
               .sort((a, b) => a.max - b.max)
               .findIndex((e) => e.group == row.group);
-            let point = 0;
             if (index > pointArr.length - 1) {
               point = pointArr[pointArr.length - 1];
             } else {
@@ -171,7 +171,6 @@ function Home() {
             let index = gameData[row.game]
               .sort((a, b) => b.max - a.max)
               .findIndex((e) => e.group == row.group);
-            let point = 0;
             if (index > pointArr.length - 1) {
               point = pointArr[pointArr.length - 1];
             } else {
@@ -193,7 +192,12 @@ function Home() {
       result.sort((a, b) => {
         return b.total_points - a.total_points;
       });
-      setLeaderboard(result);
+      const finalLeaderboard = result.map((e) => {
+        let final: Leaderboard = { ...e };
+        final.group_id = groups.filter((i) => i.name == e.group_name)[0]["id"];
+        return final;
+      });
+      setLeaderboard(finalLeaderboard);
     } catch (e) {
       console.log(e);
     } finally {
@@ -384,7 +388,7 @@ function Home() {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[24px] text-black">Rank</TableHead>
-                <TableHead className="text-black">Group Name</TableHead>
+                <TableHead className="text-black px-1">Group Name</TableHead>
                 <TableHead className="text-center text-black">
                   Total Points
                 </TableHead>
@@ -404,6 +408,7 @@ function Home() {
 }
 
 const LeaderboardRow = ({
+  group_id,
   group_name,
   total_points,
   index,
@@ -431,12 +436,13 @@ const LeaderboardRow = ({
       </TableCell>
       <TableCell
         className={cn([
-          "",
+          "px-1",
           rank === 1 && "text-[#FFD700] font-bold",
           rank === 2 && "text-[#C0C0C0] font-bold",
           rank === 3 && "text-[#B8860B] font-bold",
         ])}
       >
+        <span className="font-bold">{"Group " + group_id + ": "}</span>
         {group_name}
       </TableCell>
       <TableCell
