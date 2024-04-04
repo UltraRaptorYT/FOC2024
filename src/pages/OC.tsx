@@ -13,8 +13,9 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import dayjs from "dayjs";
 import Logout from "@/components/Logout";
-import { Trash2 } from "lucide-react";
+import { Eye, EyeOff, Trash2 } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog";
+import Home from "./Home";
 
 function OC() {
     const [logs, setLogs] = useState<any[]>([]);
@@ -24,6 +25,7 @@ function OC() {
     const [group, setGroup] = useState<string>();
     const [value, setValue] = useState<number | "">("");
     const [remarks, setRemarks] = useState<string>("");
+    const [showLeaderboard, setShowLeaderboard] = useState<boolean>(false);
 
     const [day1Game, setDay1Game] = useState<boolean>(false);
     const [day2Game, setDay2Game] = useState<boolean>(false);
@@ -323,6 +325,11 @@ function OC() {
                         </Switch.Group>
                     </div>
                 </div>
+                <Separator className="my-2" />
+                <Button className="bg-purple-800 hover:bg-purple-900 flex items-center justify-center space-x-4 my-2" onClick={() => setShowLeaderboard(!showLeaderboard)}>
+                    <h1>{showLeaderboard ? "Hide" : "Show"} Leaderboard</h1>
+                </Button>
+                {showLeaderboard && <Home />}
                 <Separator className="my-2" />
                 <div className="flex flex-col gap-2">
                     <h1 className="font-bold text-xl">Add/Remove Points</h1>
