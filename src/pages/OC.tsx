@@ -13,7 +13,7 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import dayjs from "dayjs";
 import Logout from "@/components/Logout";
-import { Eye, EyeOff, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import Home from "./Home";
 
