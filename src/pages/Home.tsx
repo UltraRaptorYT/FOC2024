@@ -20,7 +20,7 @@ type Leaderboard = {
   total_points: number;
 };
 
-function Home() {
+function Home({ oc_mode = false }: { oc_mode?: boolean }) {
   const [isLoading, setIsLoading] = useState(true);
   const [leaderboard, setLeaderboard] = useState<Leaderboard[]>([]);
   const [freeze, setFreeze] = useState(false);
@@ -108,7 +108,7 @@ function Home() {
         return;
       }
 
-      if (freezeObj.freeze) {
+      if (!oc_mode && freezeObj.freeze) {
         data = data.filter((e) => {
           return new Date(e.created_at) < freezeObj.freezeDate;
         });
@@ -419,8 +419,9 @@ function Home() {
           <Alert className="w-full">
             <Info className="h-4 w-4 stroke-red-600" />
             <AlertTitle>Attention</AlertTitle>
-            <AlertDescription>
+            <AlertDescription className="flex flex-col">
               The leaderboard is currently frozen.
+              {oc_mode && <div className="font-bold">[OC Mode Not Frozen]</div>}
             </AlertDescription>
           </Alert>
         </div>
